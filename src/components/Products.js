@@ -15,14 +15,17 @@ import { Component } from "react";
 // Class component:
 class Products extends Component {
   render() {
+    const { myproducts } = this.props;
     return (
       <section className="products">
-        <Product />
-        <Product />
-        <Product />
-        <Product />
-        <Product />
-        <Product />
+        {myproducts.map((product) => (
+          <Product
+            index={product.id}
+            img={product.image}
+            price={product.price}
+            title={product.title}
+          />
+        ))}
       </section>
     );
   }
