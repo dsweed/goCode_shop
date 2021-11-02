@@ -46,8 +46,14 @@ class Header extends Component {
         <div className="sort">
           <div className="collection-sort">
             <label>Filter by:</label>
-            <select>
-              <option value="/">All Jackets</option>
+            <select onChange={(e) => this.props.filtering(e.target.value)}>
+              {this.props.filterby_categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+            {/* <option value="/">All Jackets</option>
               <option value="/">2016</option>
               <option value="/">jacket</option>
               <option value="/">Jackets</option>
@@ -55,7 +61,7 @@ class Header extends Component {
               <option value="/">Obermeyer</option>
               <option value="/">Roxy</option>
               <option value="/">womens</option>
-            </select>
+            </select> */}
           </div>
 
           <div className="collection-sort">
