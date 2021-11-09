@@ -15,10 +15,19 @@ import { Component } from "react";
 // Class component:
 class Products extends Component {
   render() {
-    const { myproducts } = this.props;
+    const { myproducts, priceFilter, categoryFilter } = this.props;
+
+    const filteredProducts = myproducts.filter(
+      (product) =>
+        product.price >= priceFilter[0] &&
+        product.price <= priceFilter[1] &&
+        (!categoryFilter ||
+          (categoryFilter && product.category === categoryFilter))
+    );
+
     return (
       <section className="products">
-        {myproducts.map((product) => (
+        {filteredProducts.map((product) => (
           <Product
             index={product.id}
             img={product.image}

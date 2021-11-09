@@ -24,6 +24,9 @@ class App extends Component {
     myproducts: [],
     loading: false,
     error: false,
+    pricerange: [0, 1000],
+    minPrice: 0,
+    maxPrice: 1000,
   };
   componentDidMount() {
     this.fetchData();
@@ -36,19 +39,39 @@ class App extends Component {
     try {
       fetch("https://fakestoreapi.com/products")
         .then((response) => response.json())
-        .then((data) => this.setState({ myproducts: data, loading: false }));
+        .then((data) => {
+          this.setState({ myproducts: data, loading: false });
+          this.setPricesRange(data);
+        });
     } catch (e) {
       console.log(e);
     }
   }
   filterby_categories = categories;
-
+  setPricesRange(data) {
+    const products = data;
+    const productWithMinPrice = products.reduce((prev, curr) =>
+      prev.price < curr.price ? prev : curr
+    );
+    const productWithMaxPrice = products.reduce((prev, curr) =>
+      prev.price > curr.price ? prev : curr
+    );
+    this.setState({
+      pricerange: [productWithMinPrice.price, productWithMaxPrice.price],
+      minPrice: productWithMinPrice.price,
+      maxPrice: productWithMaxPrice.price,
+    });
+  }
   render() {
     return (
       <div className="App">
         <Header
           filterby_categories={this.filterby_categories}
           filtering={this.filtering}
+          range={this.state.pricerange}
+          handleChangePrice={(value) => this.setState({ pricerange: value })}
+          minPrice={this.state.minPrice}
+          maxPrice={this.state.maxPrice}
         />
         {/* <button
           onClick={() => {
@@ -58,7 +81,11 @@ class App extends Component {
         >
         </button> */}
         {this.state.loading && <CircularProgress />}
-        <Products myproducts={this.state.myproducts} />
+        <Products
+          myproducts={this.state.myproducts}
+          priceFilter={this.state.pricerange}
+          categoryFilter={this.state.category}
+        />
       </div>
     );
   }
